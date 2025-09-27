@@ -37,6 +37,20 @@
         dispatch('sendAudio');
     }
 
+    function downloadAudio() {
+        const blob = $currentAudioBlob;
+        if (!blob) return;
+
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `recording_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.mp3`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
 </script>
 
 {#if $showRecordingPreview}
@@ -59,6 +73,10 @@
             <span class="btn-icon">🗑️</span>
             <span class="btn-text">Supprimer</span>
         </button>
+        <button class="btn btn-download" on:click={downloadAudio}>
+            <span class="btn-icon">📥</span>
+            <span class="btn-text">Télécharger MP3</span>
+        </button>
         <button class="btn btn-send" on:click={() => dispatch('sendAudio')}>
             <span class="btn-icon">🚀</span>
             <span class="btn-text">Envoyer à l'IA</span>
@@ -69,14 +87,14 @@
 
 <style>
     .btn {
-        padding: 12px 30px;
+        padding: 10px 20px;
         border: none;
         border-radius: 50px;
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s;
-        min-width: 150px;
+        min-width: 120px;
     }
     .recording-preview {
         margin-top: 25px;
@@ -142,8 +160,9 @@
 
     .action-buttons {
         display: flex;
-        gap: 15px;
+        gap: 10px;
         justify-content: center;
+        flex-wrap: wrap;
     }
 
     .btn-discard {
@@ -192,6 +211,29 @@
         box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
     }
 
+    .btn-download {
+        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+        color: white;
+        border: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-download:hover {
+        background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
+    }
+
+    .btn-download:active {
+        transform: translateY(0);
+        box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
+    }
+
     .btn-icon {
         font-size: 18px;
         display: flex;
@@ -200,12 +242,13 @@
 
     .btn-text {
         font-weight: 600;
-        font-size: 15px;
+        font-size: 13px;
     }
 
     /* Button ripple effect */
     .btn-discard::before,
-    .btn-send::before {
+    .btn-send::before,
+    .btn-download::before {
         content: '';
         position: absolute;
         top: 50%;
@@ -219,7 +262,8 @@
     }
 
     .btn-discard:active::before,
-    .btn-send:active::before {
+    .btn-send:active::before,
+    .btn-download:active::before {
         width: 100px;
         height: 100px;
     }
