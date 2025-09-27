@@ -1,82 +1,92 @@
-# Audio → Texte - Application de transcription audio
+# Audio2LLM 🎤🤖
 
-Application élégante et minimaliste pour l'enregistrement audio et la transcription via OpenRouter.
+A model-agnostic audio processing application inspired by ChatGPT's transcribe feature. This weekend project lets you record audio and have it processed by various LLMs via OpenRouter.
+
+## What it does
+
+Record audio → Process with any LLM → Get intelligent responses (not just transcription, but actual AI analysis and responses)
 
 ## Structure du projet
 
 ```
-audio-transcription/
+audio2llm/
 ├── backend/
-│   ├── main.py
-│   ├── requirements.txt
-│   └── .env (à créer)
+│   ├── main.py           # FastAPI server
+│   ├── requirements.txt  # Python dependencies
+│   └── .env (à créer)   # Environment variables
 ├── frontend/
-│   └── index.html
+│   ├── src/             # Svelte TypeScript source
+│   ├── package.json     # Node.js dependencies
+│   └── vite.config.ts   # Vite configuration
 └── README.md
 ```
 
 ## Technologies utilisées
 
-- **Backend**: FastAPI (Python) - Framework moderne avec support async natif
-- **Frontend**: HTML5 vanilla - Interface native avec MediaRecorder API
-- **Transcription**: OpenRouter Whisper API
+- **Backend**: FastAPI (Python) with async support
+- **Frontend**: Svelte + TypeScript + Vite
+- **Audio Processing**: Browser MediaRecorder API
+- **AI Models**: OpenRouter API (supporting multiple LLM providers)
 
-## Instructions de lancement
+## Setup & Running
 
-### 1. Installation du backend
+### 1. Configuration
+
+Create `backend/.env` with your OpenRouter API key:
+```env
+OPENROUTER_API_KEY=your_api_key_here
+```
+
+**That's the only environment variable you need!** 🎉
+
+### 2. Backend Setup
 
 ```bash
 cd backend
 python -m venv venv
-source venv/bin/activate  # Sur Windows: venv\Scripts\activate
+source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
-```
-
-### 2. Configuration
-
-Créer le fichier `backend/.env` avec votre clé API OpenRouter :
-```env
-OPENROUTER_API_KEY=votre_clé_api
-```
-
-### 3. Démarrage
-
-**Backend :**
-```bash
-cd backend
 uvicorn main:app --reload --port 8000
 ```
 
-**Frontend :**
+### 3. Frontend Setup
+
 ```bash
 cd frontend
-python -m http.server 3000
+npm install
+npm run dev
 ```
 
-Ouvrir http://localhost:3000 dans le navigateur.
+Open http://localhost:5173 in your browser.
 
-## Fonctionnalités
+## Features
 
-- 🎙️ Enregistrement audio en temps réel via le navigateur
-- 📝 Transcription automatique via OpenRouter Whisper
-- ✨ Interface utilisateur élégante et intuitive
-- ⚡ Feedback visuel immédiat pendant l'enregistrement
-- 🔄 Gestion d'erreurs complète
+- 🎙️ **Record audio** directly in the browser
+- 🤖 **Model flexibility** - Choose from various LLMs (Google Gemini, OpenAI GPT, etc.)
+- 🧠 **Smart responses** - Not just transcription, but intelligent analysis of your audio
+- 🔍 **Web search** - Enable web search for some models to get up-to-date information
+- ✨ **Modern UI** - Clean Svelte interface with real-time feedback
+- 🔄 **Error handling** - Robust error management throughout
 
-## Points clés de l'implémentation
+## Available Models
 
-### ✨ Élégance et simplicité
+The app includes various models from different providers:
+- Google Gemini (2.0 Flash, 2.5 Flash, 2.5 Pro variants)
+- OpenAI GPT-4o (including audio preview)
+- And more...
 
-- **Pas de dépendances inutiles** : HTML5 vanilla côté front, FastAPI minimal côté back
-- **Code concis** : ~200 lignes au total pour une application complète
-- **Interface épurée** : UX intuitive avec feedback visuel immédiat
-- **Architecture claire** : Séparation nette front/back, un seul endpoint
+⚠️ **Note**: Model IDs are hardcoded and may change as providers update their offerings.
 
-### 🎯 Choix techniques justifiés
+## About This Project
 
-- **FastAPI** : Framework Python moderne, async natif, documentation automatique
-- **HTML5 MediaRecorder API** : Solution native du navigateur, pas besoin de librairies
-- **CORS minimal** : Configuration simple pour le développement local
-- **Pas de bundler** : Un seul fichier HTML self-contained
+This is a **small personal weekend project** - a "vibe-coded" implementation inspired by ChatGPT's transcribe feature, but made model-agnostic to work with various LLM providers through OpenRouter.
 
-Cette implémentation privilégie la simplicité sans sacrifier la fonctionnalité ni l'expérience utilisateur.
+### Architecture Highlights
+
+- **FastAPI backend** - Modern Python with async support and automatic API docs
+- **Svelte frontend** - Reactive UI with TypeScript for type safety
+- **Single endpoint** - Clean `/process-audio` API that handles everything
+- **OpenRouter integration** - Access to multiple LLM providers with one API
+- **Browser-native audio** - Uses MediaRecorder API, no external dependencies
+
+The goal was to create something similar to ChatGPT's audio feature but with the flexibility to use different models and providers.
